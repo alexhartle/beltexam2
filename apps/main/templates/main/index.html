@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <h1>Hello {{request.session.first_name}}!</h1>
+    <a href="logout">Logout</a>
+    <h2>Here are your appointments for today, {{ dateNice }}</h2>
+    {% if not todaysAppointments %}
+      <h3>You have no appointments scheduled for today. Add one below!</h3>
+    {% else %}
+    <table>
+        <th>Tasks</th>
+        <th>Time</th>
+        <th>Status</th>
+        <th>Action</th>
+        {% for appointment in todaysAppointments %}
+          <tr>
+            <td>{{ appointment.task }}</td>
+            <td>{{ appointment.time }}</td>
+            <td>{{ appointment.status }}</td>
+            <td><a href="edit/{{ appointment.id }}">Edit</a> <a href="delete/{{ appointment.id}}">Delete</a></td>
+          </tr>
+      {% endfor %}
+    </table>
+      {% endif %}
+    <p>
+      <h2>Your other appointments</h2>
+      <table>
+        <th>Task</th>
+        <th>Date</th>
+        <th>Time</th>
+        {% for appointment in allUserAppointments %}
+          <tr>
+            <td>{{ appointment.task }}</td>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.time }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </p>
+    <p>
+      <h2>Add Appointment</h2>
+      <form action="add" method="POST">
+        {% csrf_token %}
+        Date: (YYYY-MM-DD)<input type="text" name="date" /><br />
+        Time: (HH:MM)<input type="text" name="time" /><br />
+        Task: <input type="text" name="task" />
+        <input type="submit" value="Add" />
+      </form>
+    </p>
+    <p>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </p>
+  </body>
+</html>

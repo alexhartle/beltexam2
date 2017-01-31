@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    <a href="/main">Dashboard</a>
+    <a href="logout">Logout</a>
+    <h1>Edit Appointment</h1>
+    {{ appointment.date|date:"Y-m-d"}}
+    <form action="editAppointment/{{ appointment.id }}" method="POST">
+      {% csrf_token %}
+      Date: (YYYY-MM-DD)<input type="text" name="date" value="{{ appointment.date|date:"Y-m-d" }}" /><br />
+      Time: (HH:MM)<input type="text" name="time" value="{{ appointment.time|time:"G:i" }}" /><br />
+      Task: <input type="text" name="task" value="{{ appointment.task }}"/><br />
+      Status: <select name="status">
+                <option value="Pending" {% if appointment.status == "Pending" %} selected {% endif %}>Pending</option>
+                <option value="Done" {% if appointment.status == "Done" %} selected {% endif %}>Done</option>
+                <option value="Missed" {% if appointment.status == "Missed" %} selected {% endif %}>Missed</option>
+              </select><br />
+      <input type="submit" />
+    </form>
+    <p>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </p>
+  </body>
+</html>
